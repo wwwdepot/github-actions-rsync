@@ -2,7 +2,7 @@
 
 Rsync files from a GitHub repo to a destination server over SSH
 
-# Environment variables
+## Environment variables
 
 | Variable           | Description                                                                                                                      |
 |--------------------|----------------------------------------------------------------------------------------------------------------------------------|
@@ -18,7 +18,7 @@ Rsync files from a GitHub repo to a destination server over SSH
 | `RSYNC_TARGET`     | Where to deploy the files on the server                                                                                                              |
 | `RSYNC_SOURCE`     | What files to deploy from the repo (starts at root) **NOTE**: a trailing `/` deploys the _contents_ of the directory instead of the entire directory |
 
-# Example usage
+## Example usage
 
 ```yaml
 name: Create Sandbox
