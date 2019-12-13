@@ -10,7 +10,7 @@ Rsync files from a GitHub repo to a destination server over SSH
 | `SSH_USERNAME`     | The username to use when connecting to the destination server                                                                    |
 | `SSH_HOSTNAME`     | The hostname of the destination server                                                                                           |
 
-# Required arguments
+## Required arguments
 
 | Argument           | Description                                                                                                                                          |
 |--------------------|------------------------------------------------------------------------------------------------------------------------------------------------------|
