@@ -1,40 +1,49 @@
-# rsync deployments
+# Rsync Deployments
 
-This GitHub Action deploys *everything* in `GITHUB_WORKSPACE` to a folder on a server via rsync over ssh. 
+# Environment variables
 
-This action would usually follow a build/test action which leaves deployable code in `GITHUB_WORKSPACE`.
+| Variable           | Description                                                                                                                      |
+|--------------------|----------------------------------------------------------------------------------------------------------------------------------|
+| SSH_PRIVATE_KEY    | The private key part of an SSH key pair. The public key part should be added to the `authorized_keys` on the destination server. |
+| SSH_USERNAME       | The username to use when connecting to the destination server                                                                    |
+| SSH_HOSTNAME       | The hostname of the destination server                                                                                           |
 
-# Required SECRETs
+# Required arguments
 
-This action needs a `DEPLOY_KEY` secret variable. This should be the private key part of an ssh key pair. The public key part should be added to the authorized_keys file on the server that receives the deployment.
-
-# Required ARGs
-
-This action can receive three `ARG`s:
-
-1. The first is for any initial/required rsync flags, eg: `-avzr --delete`
-
-2. The second is for any `--exclude` flags and directory pairs, eg: `--exclude .htaccess --exclude /uploads/`. Use "" if none required.
-
-3. The third is for the deployment target, and should be in the format: `[USER]@[HOST]:[PATH]`
+| Argument           | Description                                                                   |
+|--------------------|-------------------------------------------------------------------------------|
+| RSYNC_OPTIONS      | Rsync-specific options when running the command. Exclusions, deletions, etc   |
+| RSYNC_TARGET       | Where to deploy the files on the server                                       |
+| RSYNC_SOURCE       | What files to deploy from the repo (starts at root)                           |
 
 # Example usage
 
-```
-workflow "All pushes" {
-  on = "push"
-  resolves = ["Deploy to Staging"]
-}
+```yaml
+name: Create Sandbox
 
-action "Deploy to Staging" {
-  uses = "contention/action-rsync-deploy@master"
-  secrets = ["DEPLOY_KEY"]
-  args = ["-avzr --delete", "--exclude .htaccess --exclude /uploads/", "user@server.com:/srv/myapp/public/htdocs/"]
-} 
+on: pull_request
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v1
+
+      - name: Deploy to sandbox via rsync
+        uses: trendyminds/rsync-deployments@master
+        with:
+          RSYNC_OPTIONS: -avzr --delete --exclude node_modules --exclude '.git*'
+          RSYNC_TARGET: /path/to/target/folder/on/server
+          RSYNC_SOURCE: /src/public
+        env:
+          SSH_PRIVATE_KEY: ${{secrets.SSH_PRIVATE_KEY}}
+          SSH_USERNAME: ${{secrets.SSH_USERNAME}}
+          SSH_HOSTNAME: ${{secrets.SSH_HOSTNAME}}
 ```
 
 ## Disclaimer
 
-If you're using GitHub Actions, you'll probably already know that it's still in limited public beta, and GitHub advise against using Actions in production. 
-
-So, check your keys. Check your deployment paths. And use at your own risk.
+Check your keys. Check your deployment paths. And use at your own risk!
