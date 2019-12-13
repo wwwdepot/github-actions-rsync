@@ -1,5 +1,7 @@
 # Rsync Deployments
 
+Rsync files from a GitHub repo to a destination server over SSH
+
 # Environment variables
 
 | Variable           | Description                                                                                                                      |
@@ -33,7 +35,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Deploy to sandbox via rsync
-        uses: trendyminds/rsync-deployments@master
+        uses: trendyminds/github-actions-rsync@master
         with:
           RSYNC_OPTIONS: -avzr --delete --exclude node_modules --exclude '.git*'
           RSYNC_TARGET: /path/to/target/folder/on/server
