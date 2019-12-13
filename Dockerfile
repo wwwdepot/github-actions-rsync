@@ -1,4 +1,4 @@
-FROM debian:9.5-slim
+FROM alpine:latest
 
 # Update
 RUN apt-get update
