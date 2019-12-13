@@ -1,10 +1,10 @@
 FROM alpine:latest
 
 # Update
-RUN apt-get update
+RUN apk update
 
 # Install packages
-RUN apt-get -yq install rsync openssh-client
+RUN apk add rsync openssh-client
 
 # Label
 LABEL "com.github.actions.name"="rsync deployments"
